@@ -18,7 +18,47 @@ public class CalculateRootsService extends IntentService {
     long numberToCalculateRootsFor = intent.getLongExtra("number_for_service", 0);
     if (numberToCalculateRootsFor <= 0) {
       Log.e("CalculateRootsService", "can't calculate roots for non-positive input" + numberToCalculateRootsFor);
-      return;
+    }
+    boolean flag = true;
+    long i;
+    long time = timeStartMs / 1000;
+    for(i = 2; i <= numberToCalculateRootsFor / 2; i++)
+    {
+      time = (System.currentTimeMillis() - timeStartMs) / 1000;
+      if (time >= 20)
+      {
+        flag = false;
+        break;
+      }
+      if (numberToCalculateRootsFor % i == 0)
+      {
+        break;
+      }
+    }
+
+    if (flag)
+    {
+      Intent broadcastIntent = new Intent("found_roots");
+      broadcastIntent.putExtra("original_number", numberToCalculateRootsFor);
+      if (i == (numberToCalculateRootsFor / 2) + 1)
+      {
+        broadcastIntent.putExtra("root1", 1);
+        broadcastIntent.putExtra("root2", numberToCalculateRootsFor);
+      }
+      else
+      {
+        broadcastIntent.putExtra("root1", i);
+        broadcastIntent.putExtra("root2", numberToCalculateRootsFor / i);
+      }
+      broadcastIntent.putExtra("calculation_time_seconds", time);
+      sendBroadcast(broadcastIntent);
+    }
+    else
+    {
+      Intent broadcastIntent = new Intent("stopped_calculations");
+      broadcastIntent.putExtra("original_number", numberToCalculateRootsFor);
+      broadcastIntent.putExtra("time_until_give_up_seconds", 20L);
+      sendBroadcast(broadcastIntent);
     }
     /*
     TODO:
