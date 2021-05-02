@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
       public void afterTextChanged(Editable s) {
         // text did change
         String newText = editTextUserInput.getText().toString();
-        // todo: check conditions to decide if button should be enabled/disabled (see spec below)
+
         try {
           long num = Long.parseLong(newText);
           buttonCalculateRoots.setEnabled(num > 0);
@@ -65,11 +65,11 @@ the button behavior is:
     buttonCalculateRoots.setOnClickListener(v -> {
       Intent intentToOpenService = new Intent(MainActivity.this, CalculateRootsService.class);
       String userInputString = editTextUserInput.getText().toString();
-      // todo: check that `userInputString` is a number. handle bad input. convert `userInputString` to long
-      long userInputLong = Long.parseLong(userInputString);; // todo this should be the converted string from the user
+
+      long userInputLong = Long.parseLong(userInputString);
       intentToOpenService.putExtra("number_for_service", userInputLong);
       startService(intentToOpenService);
-      // todo: set views states according to the spec (below)
+
       editTextUserInput.setEnabled(false); // set edit-text as disabled (user can't input text)
       buttonCalculateRoots.setEnabled(false); // set button as disabled (user can't click)
       progressBar.setVisibility(View.VISIBLE);
@@ -81,13 +81,6 @@ the button behavior is:
       public void onReceive(Context context, Intent incomingIntent) {
         if (incomingIntent == null || !incomingIntent.getAction().equals("found_roots")) return;
         // success finding roots!
-        /*
-         TODO: handle "roots-found" as defined in the spec (below).
-          also:
-           - the service found roots and passed them to you in the `incomingIntent`. extract them.
-           - when creating an intent to open the new-activity, pass the roots as extras to the new-activity intent
-             (see for example how did we pass an extra when starting the calculation-service)
-         */
         progressBar.setVisibility(View.GONE);
         buttonCalculateRoots.setEnabled(true);
         editTextUserInput.setEnabled(true);
@@ -110,12 +103,6 @@ the button behavior is:
     };
     registerReceiver(broadcastReceiverForSuccess, new IntentFilter("found_roots"));
 
-    /*
-    todo:
-     add a broadcast-receiver to listen for abort-calculating as defined in the spec (below)
-     to show a Toast, use this code:
-     `Toast.makeText(this, "text goes here", Toast.LENGTH_SHORT).show()`
-     */
     broadcastReceiverForFailure = new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
@@ -155,10 +142,7 @@ the button behavior is:
   }
 }
 
-
 /*
-
-TODO:
 the spec is:
 
 upon launch, Activity starts out "clean":

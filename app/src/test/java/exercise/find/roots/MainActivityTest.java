@@ -1,7 +1,9 @@
 package exercise.find.roots;
 
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import junit.framework.TestCase;
 
@@ -44,12 +46,34 @@ public class MainActivityTest extends TestCase {
     // find the edit-text and the button
     EditText inputEditText = mainActivity.findViewById(R.id.editTextInputNumber);
     Button button = mainActivity.findViewById(R.id.buttonCalculateRoots);
-
+    inputEditText.setText("125");
+    assertTrue(button.isEnabled());
     // test: insert input to the edit text and verify that the button is enabled
-    // TODO: implement
+  }
+  @Test
+  public void when_activityIsLaunching_then_ProgressShouldStartHidden(){
+    // create a MainActivity and let it think it's currently displayed on the screen
+    MainActivity mainActivity = Robolectric.buildActivity(MainActivity.class).create().visible().get();
+
+    // test: make sure that the "calculate" button is disabled
+    ProgressBar prog = mainActivity.findViewById(R.id.progressBar);
+    assertEquals(prog.getVisibility(), View.GONE);
   }
 
-  // TODO: add 1 or 2 more unit tests to the activity. so your "writing tests" skill won't get rusty.
+  @Test
+  public void when_insertingGoodNumberAndClickingButton_then_ProgressShouldDisplay(){
+    // create a MainActivity and let it think it's currently displayed on the screen
+    MainActivity mainActivity = Robolectric.buildActivity(MainActivity.class).create().visible().get();
+
+    // test: make sure that the "calculate" button is disabled
+    ProgressBar prog = mainActivity.findViewById(R.id.progressBar);
+    EditText inputEditText = mainActivity.findViewById(R.id.editTextInputNumber);
+    Button button = mainActivity.findViewById(R.id.buttonCalculateRoots);
+    inputEditText.setText("125");
+    button.performClick();
+    assertEquals(prog.getVisibility(), View.VISIBLE);
+  }
+  //  add 1 or 2 more unit tests to the activity. so your "writing tests" skill won't get rusty.
   //  possible flows to unit-test:
   //  - when activity launches, "progress" starts hidden
   //  - when inserting a good number and clicking the button, "progress" should be displayed
